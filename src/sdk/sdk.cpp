@@ -11,28 +11,41 @@ namespace {
     constexpr std::string_view kOutDirName = "sdk"sv;
     constinit std::array include_paths = {"<cstdint>"sv, "\"!GlobalTypes.hpp\""sv};
 
-    constinit std::array string_metadata_entries = {
-        FNV32("MNetworkChangeCallback"),  FNV32("MPropertyFriendlyName"), FNV32("MPropertyDescription"),
-        FNV32("MPropertyAttributeRange"), FNV32("MPropertyStartGroup"),   FNV32("MPropertyAttributeChoiceName"),
-        FNV32("MPropertyGroupName"),      FNV32("MNetworkUserGroup"),     FNV32("MNetworkAlias"),
-        FNV32("MNetworkTypeAlias"),       FNV32("MNetworkSerializer"),    FNV32("MPropertyAttributeEditor"),
-        FNV32("MPropertySuppressExpr"),   FNV32("MKV3TransferName"),      FNV32("MFieldVerificationName"),
-        FNV32("MVectorIsSometimesCoordinate"), FNV32("MNetworkEncoder"), FNV32("MPropertyCustomFGDType"),
-        FNV32("MVDataUniqueMonotonicInt"), FNV32("MScriptDescription")
-    };
+    constinit std::array string_metadata_entries = {FNV32("MNetworkChangeCallback"),
+                                                    FNV32("MPropertyFriendlyName"),
+                                                    FNV32("MPropertyDescription"),
+                                                    FNV32("MPropertyAttributeRange"),
+                                                    FNV32("MPropertyStartGroup"),
+                                                    FNV32("MPropertyAttributeChoiceName"),
+                                                    FNV32("MPropertyGroupName"),
+                                                    FNV32("MNetworkUserGroup"),
+                                                    FNV32("MNetworkAlias"),
+                                                    FNV32("MNetworkTypeAlias"),
+                                                    FNV32("MNetworkSerializer"),
+                                                    FNV32("MPropertyAttributeEditor"),
+                                                    FNV32("MPropertySuppressExpr"),
+                                                    FNV32("MKV3TransferName"),
+                                                    FNV32("MFieldVerificationName"),
+                                                    FNV32("MVectorIsSometimesCoordinate"),
+                                                    FNV32("MNetworkEncoder"),
+                                                    FNV32("MPropertyCustomFGDType"),
+                                                    FNV32("MVDataUniqueMonotonicInt"),
+                                                    FNV32("MScriptDescription")};
 
     constinit std::array string_class_metadata_entries = {
         FNV32("MResourceTypeForInfoType"),
     };
 
     constinit std::array var_name_string_class_metadata_entries = {
-        FNV32("MNetworkVarNames"), FNV32("MNetworkOverride"), FNV32("MNetworkVarTypeOverride"),
+        FNV32("MNetworkVarNames"),
+        FNV32("MNetworkOverride"),
+        FNV32("MNetworkVarTypeOverride"),
     };
 
     constinit std::array var_string_class_metadata_entries = {
         FNV32("MPropertyArrayElementNameKey"), FNV32("MPropertyFriendlyName"),      FNV32("MPropertyDescription"),
         FNV32("MNetworkExcludeByName"),        FNV32("MNetworkExcludeByUserGroup"), FNV32("MNetworkIncludeByName"),
-        FNV32("MNetworkIncludeByUserGroup"),   FNV32("MNetworkUserGroupProxy"),     FNV32("MNetworkReplayCompatField"), 
+        FNV32("MNetworkIncludeByUserGroup"),   FNV32("MNetworkUserGroupProxy"),     FNV32("MNetworkReplayCompatField"),
     };
 
     constinit std::array integer_metadata_entries = {
@@ -83,7 +96,7 @@ namespace sdk {
                 .comment(std::format("Alignment: {}", class_info->GetAligment()))
                 .comment(std::format("Size: {:#x}", class_info->m_size));
 
-            if ((class_info->m_class_flags & SCHEMA_CF1_HAS_VIRTUAL_MEMBERS) != 0) // @note: @og: its means that class probably does have vtable
+            if ((class_info->m_class_flags & SCHEMA_CF1_HAS_VIRTUAL_MEMBERS) != 0) // @note: @og: it means that class probably does have vtable
                 builder.comment("Has VTable");
             if ((class_info->m_class_flags & SCHEMA_CF1_IS_ABSTRACT) != 0)
                 builder.comment("Is Abstract");
@@ -436,8 +449,8 @@ namespace sdk {
                 for (const auto& field : class_info->GetFields()) {
                     // @fixme: @es3n1n: todo proper collision fix and remove this block
                     if (state.collision_end_offset && field.m_single_inheritance_offset < state.collision_end_offset) {
-                        builder.comment(std::format("Skipped field \"{}\" @ {:#x} because of the struct collision", field.m_name,
-                                                    field.m_single_inheritance_offset));
+                        builder.comment(
+                            std::format("Skipped field \"{}\" @ {:#x} because of the struct collision", field.m_name, field.m_single_inheritance_offset));
                         continue;
                     }
 
@@ -626,7 +639,6 @@ namespace sdk {
     }
 } // namespace sdk
 
-
 // source2gen - Source2 games SDK generator
 // Copyright 2023 neverlosecc
 //
@@ -642,4 +654,3 @@ namespace sdk {
 // See the License for the specific language governing permissions and
 // limitations under the License.
 //
-
