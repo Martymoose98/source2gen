@@ -25,22 +25,49 @@ git clone --recurse-submodules https://github.com/neverlosecc/source2gen.git
 
 ### Update the Game Definition
 
-Before building the project in Visual Studio, you will need to update the game define in the file `include\sdk\interfaces\schemasystem\schema.h`. 
-The current definition is `CSGO2`, which corresponds to the game that this project is used for. \
-Possible options are: `CSGO2`, `SBOX`, `ARTIFACT2`, `ARTIFACT1`, `DOTA2`, `UNDERLORDS`, `DESKJOB`. \
-You can leave it as it is if you would use this project with the CS2 game.
+Before building the project in Visual Studio, you will need to update the game definition. 
+The default definition is `CS2`. \
+Possible options are: `CS2`, `SBOX`, `ARTIFACT2`, `ARTIFACT1`, `DOTA2`, `UNDERLORDS`, `DESKJOB`. 
+
+or
+
+You can use premake5 options and specify which game you want to dump:
+```bash
+ --game=CS2          
+ Choose a particular game for dumping source 2 sdk; one of:
+     ARTIFACT1        Artifact Classic
+     ARTIFACT2        Artifact Foundry
+     CS2              Counter-Strike 2
+     DESKJOB          Aperture Desk Job
+     DOTA2            Dota 2
+     HL_ALYX          Half-Life: Alyx
+     SBOX             S&BOX
+     THE_LAB_ROBOT_REPAIR Portal: Aperture Robot Repair
+     UNDERLORDS       Dota Underlords
+```
 
 ### Building the project
+
+#### With premake5
 
 * Open a command prompt or terminal in the project's root directory.
 * Run the following command to generate the Visual Studio solution:
 
 ```bash
-premake5 vs2019
+premake5 vs2019 --game=CS2
 ```
 * Open the generated source2gen.sln file in Visual Studio.
 * Build the solution in the desired configuration (Debug, Release, or Dist).
 
+#### With CMake
+
+* Open a command prompt or terminal in the project's root directory.
+* Run the following sequence of commands to build the project:
+
+```bash
+cmake -B build -DCMAKE_BUILD_TYPE=Release -DSOURCE2GEN_GAME=CS2
+cmake --build build
+```
 ---
 
 ## Credits
@@ -54,5 +81,6 @@ This project is made possible by the contributions of various individuals and pr
 
 This project also utilizes the following open-source libraries:
 - **[Premake](https://github.com/premake/premake-core)** - Build configuration tool
+- **[CMake](https://github.com/Kitware/CMake)** - Build tool
 
 If you've contributed to the project and would like to be listed here, please submit a [pull request](https://github.com/neverlosecc/source2gen/pulls) with your information added to the credits.

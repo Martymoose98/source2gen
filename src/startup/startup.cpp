@@ -5,20 +5,23 @@
 
 #include "tools/console/console.h"
 
+#include <thread>
+
 namespace {
     using namespace std::string_view_literals;
 
     // clang-format off
-    constexpr std::initializer_list<std::string_view> kRequiredGameModules = {
+    constexpr std::array kRequiredGameModules = {
         // @note: @es3n1n: modules that we'll use in our code
         "client.dll"sv,
         "engine2.dll"sv,
         "schemasystem.dll"sv,
         "tier0.dll"sv,
-        
+
+        #if defined(DOTA2)
         // @note: @soufiw: latest modules that gets loaded in the main menu
         "navsystem.dll"sv,
-        #if defined(CSGO2)
+        #elif defined(CS2)
         "matchmaking.dll"sv,
         #endif
     };
@@ -31,7 +34,7 @@ namespace source2_gen {
     void Setup() try {
         // @note: @es3n1n: Waiting for game init
         //
-        const auto required_modules_present = []() [[msvc::forceinline]] -> bool {
+        const auto required_modules_present = []() -> bool {
             bool result = true;
 
             for (auto& name : kRequiredGameModules)
@@ -51,7 +54,7 @@ namespace source2_gen {
         if (!sdk::g_schema)
             throw std::runtime_error(std::format("Unable to obtain Schema interface"));
 
-        while(!sdk::g_schema->SchemaSystemIsReady())
+        while (!sdk::g_schema->IsSchemaSystemReady())
             sleep_for(std::chrono::seconds(5));
 
         // @note: @es3n1n: Obtaining type scopes and generating sdk
@@ -77,7 +80,7 @@ namespace source2_gen {
         is_finished = true;
     }
 
-    void WINAPI main(const HMODULE module) {
+    void main(HMODULE module) {
         auto console = std::make_unique<DebugConsole>();
         console->start(kConsoleTitleMessage.data());
 
@@ -94,10 +97,9 @@ namespace source2_gen {
         console->stop();
         console.reset();
 
-        FreeLibraryAndExitThread(module, EXIT_SUCCESS);
+        FreeLibrary(module);
     }
 } // namespace source2_gen
-
 
 // source2gen - Source2 games SDK generator
 // Copyright 2023 neverlosecc
@@ -114,4 +116,3 @@ namespace source2_gen {
 // See the License for the specific language governing permissions and
 // limitations under the License.
 //
-

@@ -12,12 +12,12 @@
 namespace codegen {
     constexpr char kTabSym = '\t';
     constexpr std::size_t kTabsPerBlock = 1; // @note: @es3n1n: how many \t characters shall we place per each block
-    constexpr std::initializer_list<char> kBlacklistedCharacters = {':', ';', '\\', '/'};
+    constexpr std::array kBlacklistedCharacters = {':', ';', '\\', '/'};
 
     // @note: @es3n1n: a list of possible integral types for bitfields (would be used in `guess_bitfield_type`)
     //
     // clang-format off
-    constexpr std::initializer_list<std::pair<std::size_t, std::string_view>> kBitfieldIntegralTypes = {
+    constexpr auto kBitfieldIntegralTypes = std::to_array<std::pair<std::size_t, std::string_view>>({
         {8, "uint8_t"},
         {16, "uint16_t"},
         {32, "uint32_t"},
@@ -27,7 +27,7 @@ namespace codegen {
         {128, "uint128_t"},
         {256, "uint256_t"},
         {512, "uint512_t"},
-    };
+    });
     // clang-format on
 
     inline std::string guess_bitfield_type(const std::size_t bits_count) {
@@ -43,12 +43,14 @@ namespace codegen {
 
     struct generator_t {
         using self_ref = std::add_lvalue_reference_t<generator_t>;
+
     public:
         constexpr generator_t() = default;
         constexpr ~generator_t() = default;
         constexpr self_ref operator=(self_ref v) {
             return v;
         }
+
     public:
         self_ref pragma(const std::string& val) {
             return push_line(std::format("#pragma {}", val));
@@ -59,11 +61,15 @@ namespace codegen {
         }
 
         self_ref disable_warnings(const std::string& codes) {
-            return push_line("#pragma warning(push)").push_line(std::format("#pragma warning(disable: {})", codes));
+            return push_warning().pragma(std::format("warning(disable: {})", codes));
+        }
+
+        self_ref push_warning() {
+            return pragma("warning(push)");
         }
 
         self_ref pop_warning() {
-            return push_line("#pragma warning(pop)");
+            return pragma("warning(pop)");
         }
 
         self_ref next_line() {
@@ -211,7 +217,7 @@ namespace codegen {
             return push_line(line, move_cursor_to_next_line);
         }
 
-        self_ref forward_declartion(const std::string& text) {
+        self_ref forward_declaration(const std::string& text) {
             // @note: @es3n1n: forward decl only once
             const auto fwd_decl_hash = fnv32::hash_runtime(text.data());
             if (_forward_decls.contains(fwd_decl_hash))
@@ -257,10 +263,12 @@ namespace codegen {
             dec_tabs_count(1);
             return push_line(move_cursor_to_next_line ? "};" : "}; ", move_cursor_to_next_line);
         }
+
     public:
         [[nodiscard]] std::string str() {
             return _stream.str();
         }
+
     private:
         self_ref push_line(const std::string& line, bool move_cursor_to_next_line = true) {
             for (std::size_t i = 0; i < _tabs_count; i++)
@@ -281,6 +289,7 @@ namespace codegen {
 
             return result;
         }
+
     public:
         self_ref inc_tabs_count(std::size_t count = 1) {
             _tabs_count_backup = _tabs_count;
@@ -305,6 +314,7 @@ namespace codegen {
             _tabs_count = 0;
             return *this;
         }
+
     private:
         std::stringstream _stream = {};
         std::size_t _tabs_count = 0, _tabs_count_backup = 0;
@@ -313,11 +323,10 @@ namespace codegen {
         std::set<fnv32::hash> _forward_decls = {};
     };
 
-    __forceinline generator_t get() {
+    inline generator_t get() {
         return generator_t{};
     }
 } // namespace codegen
-
 
 // source2gen - Source2 games SDK generator
 // Copyright 2023 neverlosecc
@@ -334,4 +343,3 @@ namespace codegen {
 // See the License for the specific language governing permissions and
 // limitations under the License.
 //
-

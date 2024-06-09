@@ -27,11 +27,14 @@ namespace detail {
     class FnvHash {
     private:
         using data_t = SizeSelector<Size>;
+
     public:
         using hash = typename data_t::type;
+
     private:
         constexpr static auto k_offset_basis = data_t::k_offset_basis;
         constexpr static auto k_prime = data_t::k_prime;
+
     public:
         static __forceinline constexpr auto hash_init() -> hash {
             return k_offset_basis;
@@ -109,7 +112,6 @@ using fnv = ::detail::FnvHash<sizeof(void*) * 8>;
 #define FNV32(str) (std::integral_constant<fnv32::hash, fnv32::hash_constexpr(str)>::value)
 #define FNV64(str) (std::integral_constant<fnv64::hash, fnv64::hash_constexpr(str)>::value)
 
-
 // source2gen - Source2 games SDK generator
 // Copyright 2023 neverlosecc
 //
@@ -125,4 +127,3 @@ using fnv = ::detail::FnvHash<sizeof(void*) * 8>;
 // See the License for the specific language governing permissions and
 // limitations under the License.
 //
-

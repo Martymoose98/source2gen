@@ -145,6 +145,7 @@ public:
         if (this->m_active_)
             this->m_active_ = false;
     }
+
 private:
     HWND h_console_window_ = nullptr;
     bool m_active_ = false;
@@ -156,7 +157,6 @@ private:
     HANDLE old_err_ = nullptr;
     HANDLE old_in_ = nullptr;
 };
-
 
 // source2gen - Source2 games SDK generator
 // Copyright 2023 neverlosecc
@@ -173,4 +173,3 @@ private:
 // See the License for the specific language governing permissions and
 // limitations under the License.
 //
-

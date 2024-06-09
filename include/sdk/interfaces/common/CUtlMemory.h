@@ -128,6 +128,7 @@ public:
     bool IsExternallyAllocated() const;
     bool IsReadOnly() const;
     void SetGrowSize(int size);
+
 protected:
     void ValidateGrowSize() const { }
 
@@ -135,6 +136,7 @@ protected:
         EXTERNAL_BUFFER_MARKER = -1,
         EXTERNAL_CONST_BUFFER_MARKER = -2,
     };
+
 public:
     T* m_pMemory;
     int m_nAllocationCount;
@@ -508,7 +510,6 @@ void CUtlMemory<T, I>::Purge(int numElements) {
     m_pMemory = (T*)GetMemAlloc()->ReAlloc(m_pMemory, m_nAllocationCount * sizeof(T));
 }
 
-
 // source2gen - Source2 games SDK generator
 // Copyright 2023 neverlosecc
 //
@@ -524,4 +525,3 @@ void CUtlMemory<T, I>::Purge(int numElements) {
 // See the License for the specific language governing permissions and
 // limitations under the License.
 //
-

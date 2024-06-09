@@ -1,22 +1,28 @@
 // Copyright (C) 2023 neverlosecc
 // See end of file for extended copyright information.
-#include <Include.h>
+#pragma once
 
-namespace {
-    void OnProcessAttach(const HMODULE h_module) {
-        std::thread([h_module]() -> void { source2_gen::main(h_module); }).detach();
-    }
-} // namespace
+#include <cstddef>
 
-BOOL APIENTRY DllMain(const HMODULE module, const DWORD reason, LPVOID reserved [[maybe_unused]]) {
-    switch (reason) {
-    case DLL_PROCESS_ATTACH:
-        OnProcessAttach(module);
-        break;
-    }
+#ifdef _WIN32
+typedef std::uint32_t ThreadId_t;
+#else
+typedef std::uint64_t ThreadId_t;
+#endif
 
-    return TRUE;
-}
+constexpr auto kTtSizeofCriticalsection = 40;
+
+class CThreadMutex {
+public:
+    std::byte m_CriticalSection[kTtSizeofCriticalsection];
+
+    // Debugging (always herge to allow mixed debug/release builds w/o changing size)
+    ThreadId_t m_currentOwnerID;
+    std::uint16_t m_lockCount;
+    bool m_bTrace;
+    const char* m_pDebugName;
+};
+static_assert(sizeof(CThreadMutex) == 0x38);
 
 // source2gen - Source2 games SDK generator
 // Copyright 2023 neverlosecc

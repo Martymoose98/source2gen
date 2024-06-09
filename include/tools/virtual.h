@@ -6,7 +6,7 @@
 
 namespace Virtual {
     template <typename T>
-    __forceinline T Get(void* instance, const unsigned int index) {
+    inline T Get(void* instance, const unsigned int index) {
         return (*static_cast<T**>(instance))[index];
     }
 
@@ -20,7 +20,6 @@ namespace Virtual {
         *reinterpret_cast<T*>(location) = data;
     }
 } // namespace Virtual
-
 
 // source2gen - Source2 games SDK generator
 // Copyright 2023 neverlosecc
@@ -37,4 +36,3 @@ namespace Virtual {
 // See the License for the specific language governing permissions and
 // limitations under the License.
 //
-

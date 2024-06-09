@@ -1,22 +1,20 @@
 // Copyright (C) 2023 neverlosecc
 // See end of file for extended copyright information.
-#include <Include.h>
+#pragma once
 
-namespace {
-    void OnProcessAttach(const HMODULE h_module) {
-        std::thread([h_module]() -> void { source2_gen::main(h_module); }).detach();
-    }
-} // namespace
+class CThreadSpinRWLock {
+public:
+    struct LockInfo_t {
+        std::uint32_t m_writerId;
+        std::int32_t m_nReaders;
+    };
 
-BOOL APIENTRY DllMain(const HMODULE module, const DWORD reason, LPVOID reserved [[maybe_unused]]) {
-    switch (reason) {
-    case DLL_PROCESS_ATTACH:
-        OnProcessAttach(module);
-        break;
-    }
-
-    return TRUE;
-}
+public:
+    void* m_pThreadSpin;
+    LockInfo_t m_lockInfo;
+    const char* m_pszDebugName;
+};
+static_assert(sizeof(CThreadSpinRWLock) == 0x18);
 
 // source2gen - Source2 games SDK generator
 // Copyright 2023 neverlosecc

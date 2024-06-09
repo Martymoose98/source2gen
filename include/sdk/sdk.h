@@ -6,13 +6,22 @@
 
 #include <sdk/interfaces/tier0/IMemAlloc.h>
 
+#include <sdk/interfaces/common/CBufferString.h>
+#include <sdk/interfaces/common/CThreadMutex.h>
+#include <sdk/interfaces/common/CThreadSpinRWLock.h>
+#include <sdk/interfaces/common/CThreadSpinMutex.h>
+#include <sdk/interfaces/common/CInterlockedInt.h>
+#include <sdk/interfaces/common/CTSList.h>
+#include <sdk/interfaces/common/CUtlMemoryPoolBase.h>
 #include <sdk/interfaces/common/CUtlMap.h>
 #include <sdk/interfaces/common/CUtlMemory.h>
+#include <sdk/interfaces/common/CUtlRBTree.h>
 #include <sdk/interfaces/common/CUtlString.h>
-#include <sdk/interfaces/common/CUtlVector.h>
 #include <sdk/interfaces/common/CUtlTSHash.h>
+#include <sdk/interfaces/common/CUtlVector.h>
 
 #include <sdk/interfaceregs.h>
+#include <sdk/interfaces/client/game/datamap_t.h>
 #include <sdk/interfaces/schemasystem/Schema.h>
 
 namespace sdk {
@@ -20,7 +29,6 @@ namespace sdk {
 
     void GenerateTypeScopeSdk(CSchemaSystemTypeScope* current);
 } // namespace sdk
-
 
 // source2gen - Source2 games SDK generator
 // Copyright 2023 neverlosecc
@@ -37,4 +45,3 @@ namespace sdk {
 // See the License for the specific language governing permissions and
 // limitations under the License.
 //
-
