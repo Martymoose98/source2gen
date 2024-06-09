@@ -1,7 +1,9 @@
 // Copyright (C) 2023 neverlosecc
 // See end of file for extended copyright information.
 #pragma once
+#include <array>
 #include <cstdint>
+#include <optional>
 #include <set>
 #include <sstream>
 #include <string>
@@ -9,10 +11,17 @@
 
 #include "tools/fnv.h"
 
+// FIXME:
+// enum IChoreoServices__ChoreoState_t : uint32_t
+// struct CAttributeManager::cached_attribute_float_t
+// CLogicBranchList::LogicBranchListenerLastState_t : uint32_t
+// wtf!!?
 namespace codegen {
     constexpr char kTabSym = '\t';
     constexpr std::size_t kTabsPerBlock = 1; // @note: @es3n1n: how many \t characters shall we place per each block
     constexpr std::array kBlacklistedCharacters = {':', ';', '\\', '/'};
+    constexpr std::string_view kInterfaceName = "Interfaces";
+    constexpr std::string_view kSchemaInterfaceName = "g_pSchema";
 
     // @note: @es3n1n: a list of possible integral types for bitfields (would be used in `guess_bitfield_type`)
     //
@@ -196,9 +205,10 @@ namespace codegen {
             auto backup_tabs_count = _tabs_count;
             _tabs_count = 0;
 
-            auto getter = std::format(
-                "*reinterpret_cast<{}*>(interfaces::g_schema->FindTypeScopeForModule(\"{}\")->FindDeclaredClass(\"{}\")->m_static_fields[{}]->m_instance)",
-                type_name, mod_name, decl_class, index);
+            auto getter =
+                std::format("*reinterpret_cast<{}*>({}::{}->FindTypeScopeForModule(\"{}\")->FindDeclaredClass(\"{}\")->m_static_fields[{}]->m_instance)",
+                            type_name, kInterfaceName, kSchemaInterfaceName, mod_name, decl_class, index);
+
             return_value(getter, false);
             end_function(false, false);
 
